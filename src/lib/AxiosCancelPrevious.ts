@@ -3,30 +3,30 @@ import axios, { CancelToken, CancelTokenStatic, CancelTokenSource } from 'axios'
 
 
 export class AxiosCancelPrevious extends AxiosMiddleWear {
-    configs: { [url: string]: CancelTokenSource } = {};
+    public configs: { [url: string]: CancelTokenSource } = {};
 
     constructor() {
         super();
     }
 
-    onRequest(config: AxiosManagerRequestConfig) {
+    public onRequest(config: AxiosManagerRequestConfig) {
         if (config.url && this.configs[config.url]) {
-            this.configs[config.url].cancel({config: config,cancelmessage:"axios cancel message" } as any);
-            this.log("cancel " + config.url, "red")
+            this.configs[config.url].cancel({config, cancelmessage: "axios cancel message" } as any);
+            this.log("cancel " + config.url, "red");
         }
 
         if (config.url) {
-            var CancelToken = axios.CancelToken;
-            var source = CancelToken.source();
+            const cancelToken = axios.CancelToken;
+            const source = cancelToken.source();
             config.cancelToken = source.token;
             this.configs[config.url] = source;
         }
         return config;
     }
-    onResponse(response: AxiosManagerResponse) {
+    public onResponse(response: AxiosManagerResponse) {
         return response;
     }
-    onResponseError(error: AxiosManagerError) {
-        return error
+    public onResponseError(error: AxiosManagerError) {
+        return error;
     }
 }

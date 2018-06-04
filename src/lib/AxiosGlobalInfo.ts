@@ -3,65 +3,65 @@ import { AxiosMiddleWear, AxiosManagerRequestConfig, AxiosManagerResponse , Axio
 import axios, { CancelToken, CancelTokenStatic, CancelTokenSource } from 'axios';
 
 class HttpRequestInfo {
-    pending: number = 0;
-    success: number = 0;
-    error: number = 0;
-    done: number = 0;
+    public pending: number = 0;
+    public success: number = 0;
+    public error: number = 0;
+    public done: number = 0;
 }
 
-var ExtractUrl = function(url: string) {
-    var index = url.indexOf("?");
+const ExtractUrl = (url: string)  => {
+    const index = url.indexOf("?");
     return index > -1 ? url.substring(0, url.indexOf("?")) : url;
-}
+};
 
 export class AxiosGlobalInfo extends AxiosMiddleWear {
 
-    GlobalStats: HttpRequestInfo = new HttpRequestInfo();
-    StatByRequest: { [url: string]: HttpRequestInfo } = {};
+    public GlobalStats: HttpRequestInfo = new HttpRequestInfo();
+    public StatByRequest: { [url: string]: HttpRequestInfo } = {};
 
     constructor() {
         super();
     }
 
-    onRequest(config: AxiosManagerRequestConfig) {
-        this.infoLaunch(config)
+    public onRequest(config: AxiosManagerRequestConfig) {
+        this.infoLaunch(config);
         return config;
     }
 
-    onRequestError(error: AxiosManagerError) {
+    public onRequestError(error: AxiosManagerError) {
         this.infoError(error);
         return error;
     }
 
-    onResponse(response: AxiosManagerResponse) {
+    public onResponse(response: AxiosManagerResponse) {
         this.infoComplete(response);
         return response;
     }
 
-    onResponseError(error: AxiosManagerError) {
+    public onResponseError(error: AxiosManagerError) {
         this.infoError(error);
         return error;
     }
 
 
 
-    infoLaunch(config: AxiosManagerRequestConfig) {
+    public infoLaunch(config: AxiosManagerRequestConfig) {
         if (config.url) {
-            var url = ExtractUrl(config.url);
+            const url = ExtractUrl(config.url);
             if (!this.StatByRequest[url]) {
                 this.StatByRequest[url] = new HttpRequestInfo();
             }
-            let statCurrent = this.StatByRequest[url];
+            const statCurrent = this.StatByRequest[url];
             statCurrent.pending++;
             this.GlobalStats.pending++;
         }
     }
 
-    infoError(error: AxiosManagerError) {
-        let config = error.config;
+    public infoError(error: AxiosManagerError) {
+        const config = error.config;
         if (config && config.url) {
-            var url = ExtractUrl(config.url);
-            let statCurrent = this.StatByRequest[url];
+            const url = ExtractUrl(config.url);
+            const statCurrent = this.StatByRequest[url];
             statCurrent.error++;
             statCurrent.done++;
             statCurrent.pending--;
@@ -71,11 +71,11 @@ export class AxiosGlobalInfo extends AxiosMiddleWear {
         this.GlobalStats.pending--;
     }
 
-    infoComplete(response: AxiosManagerResponse) {
-        let config = response.config;
+    public infoComplete(response: AxiosManagerResponse) {
+        const config = response.config;
         if (config.url) {
-            var url = ExtractUrl(config.url);
-            let statCurrent = this.StatByRequest[url];
+            const url = ExtractUrl(config.url);
+            const statCurrent = this.StatByRequest[url];
             statCurrent.success++;
             statCurrent.done++;
             statCurrent.pending--;

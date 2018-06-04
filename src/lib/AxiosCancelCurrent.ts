@@ -1,51 +1,61 @@
-
-import { AxiosMiddleWear, AxiosManagerRequestConfig, AxiosManagerResponse , AxiosManagerError} from "./AxiosManager";
-import axios, { CancelToken, CancelTokenStatic, AxiosStatic, AxiosRequestConfig, AxiosResponse, AxiosError, CancelTokenSource } from 'axios';
+import {
+  AxiosMiddleWear,
+  AxiosManagerRequestConfig,
+  AxiosManagerResponse,
+  AxiosManagerError
+} from "./AxiosManager";
+import axios, {
+  CancelToken,
+  CancelTokenStatic,
+  AxiosStatic,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+  CancelTokenSource
+} from "axios";
 
 export class AxiosCancelCurrent extends AxiosMiddleWear {
-    configs: { [url: string]: boolean } = {};
+  public configs: { [url: string]: boolean } = {};
+  public i = 0;
 
-    constructor() {
-        super();
-    }
-    i=0;
-    onRequest(config: AxiosManagerRequestConfig) {
-        (config as any).id = this.i++;
-        if (config.url && this.configs[config.url]) {
-            var CancelToken = axios.CancelToken;
-            var source = CancelToken.source();
-            config.cancelToken = source.token;
-            source.cancel('Operation canceled by the user.');
-            this.log("cancel "+this.i+": " + config.url, "red");
-        }
+  constructor() {
+    super();
+  }
 
-        if (config.url) {
-            this.configs[config.url] = true;
-        }
-
-        return config;
-    }
-    onResponse(response: AxiosManagerResponse) {
-        
-        this.$removeConfigOnResponse(response.config);
-        return response;
-    }
-    onResponseError(error: AxiosManagerError) {
-        var canceled = axios.isCancel(error);
-        if(!canceled){
-            this.$removeConfigOnResponse(error.config);
-        }
-        return error;
+  public onRequest(config: AxiosManagerRequestConfig) {
+    (config as any).id = this.i++;
+    if (config.url && this.configs[config.url]) {
+      const cancelToken = axios.CancelToken;
+      const source = cancelToken.source();
+      config.cancelToken = source.token;
+      source.cancel("Operation canceled by the user.");
+      this.log("cancel " + this.i + ": " + config.url, "red");
     }
 
-    $removeConfigOnResponse(config: AxiosRequestConfig) {
-        if (config && config.url) {
-            delete this.configs[config.url];
-        }
+    if (config.url) {
+      this.configs[config.url] = true;
     }
+
+    return config;
+  }
+  public onResponse(response: AxiosManagerResponse) {
+    this.$removeConfigOnResponse(response.config);
+    return response;
+  }
+  public onResponseError(error: AxiosManagerError) {
+    const canceled = axios.isCancel(error);
+    if (!canceled) {
+      this.$removeConfigOnResponse(error.config);
+    }
+    return error;
+  }
+
+  public $removeConfigOnResponse(config: AxiosRequestConfig) {
+    if (config && config.url) {
+      delete this.configs[config.url];
+    }
+  }
 }
-
-
 
 // interface ZAxiosRequestConfig extends AxiosRequestConfig {
 //     id: number;
