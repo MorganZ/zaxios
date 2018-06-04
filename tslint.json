@@ -1,0 +1,18 @@
+{
+  "defaultSeverity": "warning",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "quotemark": [false, "single"],
+    "indent": [false, "tabs", 2],
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-consecutive-blank-lines": false,
+    "trailing-comma": [false],
+    "max-classes-per-file": [false, 1],
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "no-console":false
+  }
+}
