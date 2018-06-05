@@ -8,18 +8,15 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": ["node"],
+    // "types": ["node"],
+    "outDir": "./dist",
     "paths": {
       "@/*": ["src/*"]
     },
     "lib": ["es2015", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "lib/**/*.ts",
   ],
   "exclude": ["node_modules"]
 }
