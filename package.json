@@ -1,8 +1,12 @@
 {
   "name": "zaxios",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "main": "./dist/index.ts",
   "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MorganZ/zaxios"
+  },
   "scripts": {
     "build":"rm -f -R ./dist & tsc & tsc -d"
   },
@@ -13,9 +17,6 @@
     "typescript": "^2.9.1",
     
     "express": "^4.16.3"
-  },
-  "prettier": {
-    "singleQuote": false
   },
   "browserslist": [
     "> 1%",
