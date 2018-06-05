@@ -19,12 +19,16 @@ export interface AxiosManagerError extends AxiosError {
 }
 
 const log = (sender: string, message: string, color: string = "#41b883") => {
-  console.log(
-    `%c ${sender} %c ${message} %c`,
-    "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
-    `background:${color} ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff`,
-    "background:transparent"
-  );
+  if (typeof window === "undefined") {
+    console.log(
+      `%c ${sender} %c ${message} %c`,
+      "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
+      `background:${color} ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff`,
+      "background:transparent"
+    );
+  } else {
+    console.log(sender + " : " + message);
+  }
 };
 
 export class AxiosMiddleWear {
@@ -85,12 +89,12 @@ class AxiosManager {
     this.ejectInterceptorsFunction = this.ejectInterceptorsDefaultFunction;
   }
 
-
   private ejectInterceptorsDefaultFunction: () => void = () => {
     log(this.constructor.name, "no more interceptor", "red");
   }
 
-  private ejectInterceptorsFunction: () => void = this.ejectInterceptorsDefaultFunction;
+  private ejectInterceptorsFunction: () => void = this
+    .ejectInterceptorsDefaultFunction;
 
   private $onRequest(config: AxiosManagerRequestConfig) {
     // Do something before request is sent
